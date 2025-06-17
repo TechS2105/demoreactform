@@ -9,30 +9,38 @@ function Form() {
         register,
         handleSubmit,
         reset,
-        formState: { errors, isSubmitting }
+        formState: { errors}
 
     } = useForm();
 
-    const delay = (d) => {
+    // const delay = (d) => {
 
-        return new Promise((resolve, reject) => {
+    //     return new Promise((resolve, reject) => {
 
-            setTimeout(() => {
+    //         setTimeout(() => {
 
-                resolve();
+    //             resolve();
 
-            }, d * 1000)
+    //         }, d * 1000)
 
-        });
+    //     });
 
-    }
+    // }
 
     // const onSubmit = (data) => console.log(data);
 
     const onSubmit = async (data) => {
         
-        await delay(2);
-        console.log(data);
+        // await delay(2);
+        let r = await fetch('http://localhost:3000/api/fetchformdata', {
+
+            headers: { "Content-Type": "application/json; charset=utf-8" },
+            method: 'POST',
+            body: JSON.stringify(data)
+
+        });
+        let res = await r.text();
+        console.log(data, res);
         reset();
 
     }
@@ -72,10 +80,9 @@ function Form() {
             <label htmlFor="message"> Message <sup className={FormStyle.star}> * </sup></label><br />
             <textarea cols={68} rows={7} {...register("message", { required: { value: true, message: "This field is required" } })}></textarea><br />
             
-            {errors.message && <div className={FormStyle.errorstyle}>{errors.message.message}</div>}
-
-            {isSubmitting && <div style={{color: "snow"}}> Form is submitting... </div>}<br />
-            <button type='submit' disabled={isSubmitting}> Submit </button>
+            {errors.message && <div className={FormStyle.errorstyle}>{errors.message.message}</div>}<br />
+            
+            <button type='submit' > Submit </button>
 
         </form>
 
